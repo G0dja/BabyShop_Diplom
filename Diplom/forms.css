@@ -1,0 +1,34 @@
+form {
+  padding: 20px;
+  border: 1px solid;
+}
+
+form .form-title {
+  margin-bottom: 15px;
+}
+
+form .form-field,
+form .characteristics-list {
+  margin-bottom: 20px;
+}
+
+form .form-field label,
+form .characteristics-list .title,
+form .form-field-field {
+  display: block;
+  margin-bottom: 5px;
+}
+
+form .form-field #item_title,
+form .form-field textarea {
+  width: 100%;
+}
+
+form .form-field-field {
+  display: flex;
+  justify-content: space-between;
+}
+
+form .form-field-field input {
+  width: 48%;
+}
