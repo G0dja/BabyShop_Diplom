@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="default.css">
+  <link rel="stylesheet" href="core.css">
+  <link rel="stylesheet" href="item-page.css">
+  <link rel="stylesheet" href="buttons.css">
+</head>
+<body>
+  
+  <header class="page-section"> <!-- хедер-контейнер -->
+    <a href="/" class="logo header-item"> <!-- контейнер для логотипа -->
+      <img src="images/logo.png" alt="логотип"> <!-- картинка логотипа -->
+    </a>
+
+    <div class="search-bar header-item"> <!-- контейнер для вкладки поиска -->
+      <form class="not-form" action="/"> <!-- форма -->
+        <input id="search" type="text" name="search" placeholder="пошук товару"> <!-- вводчик текста для поиска товара по названию -->
+        <button type="submit">пошук</button> <!-- кнопка для поиска -->
+      </form>
+    </div>
+
+    <div class="account-tools header-item"> <!-- контейнер для элементов аккаунта -->
+      <a href="account" class="account-link">
+        <img src="images/account-30.png" alt="account">
+      </a> <!-- ссылка на страницу аккаунта -->
+      <a href="cart" class="shopping-cart-link">
+        <img src="images/cart-30.png" alt="cart">
+      </a> <!-- ссылка на страницу выбраных к покупке товаров -->
+    </div>
+  </header>
+
+  {{admin-tools}}
+
+  <main class="page-section">
+    <h1 id="item-title">{{title}}</h1>
+    <p>{{rating}}</p>
+    <p>Ідентифікатор: {{item_id}}</p>
+    <hr>
+
+    <div class="item-container">
+      <div class="images-slider-container">
+        <div class="slider-display">
+          <div class="slider-arrow arrow-left" ><</div>
+
+          <div class="slider-items">
+            {{images}}
+            <!-- <div class="div-image active" style="background-image: url(/images/joystick2.png)"></div>
+            <div class="div-image" style="background-image: url(/images/joystick2.png)"></div>
+            <div class="div-image" style="background-image: url(/images/Joystick.png)"></div> -->
+          </div>
+
+          <div class="slider-arrow arrow-right">></div>
+        </div>
+        <div class="slider-pagination">
+          {{images}}
+          <!-- <div class="div-image active" style="background-image: url(/images/joystick2.png)"></div>
+          <div class="div-image" style="background-image: url(/images/joystick2.png)"></div>
+          <div class="div-image" style="background-image: url(/images/Joystick.png)"></div> -->
+        </div>
+      </div>
+
+      <div class="description-container">
+        <div class="shopping-window description-window">
+          <div>
+            <p class="shopping-price"><span id="item-price" class="price-number">{{price}}</span> ₴</p>
+            <button id="buy-item">Купити</button>
+          </div>
+          <div>
+            <!-- <div class="add-to-like shopping-buttons">
+              <img src="images/heart-50.png" alt="heart">
+            </div> -->
+            <div class="add-to-buy shopping-buttons" data-buy-item-id="{{item_id}}">
+              <img class="cart-for-add-to-cart" src="images/cart-48.png" alt="cart">
+            </div>
+          </div>
+        </div>
+
+        <div class="shipping-window description-window">
+          <p class="title">Доставка:</p>
+          <div class="description">{{shipping}}</div>
+        </div>
+
+        <div class="guaranty-window description-window">
+          <div><strong>Гарантія:</strong> <div class="description">{{guaranty}}</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="texts-container">
+      <div>
+        <div class="texts-description">
+          <p class="texts-h1">Опис</p>
+          <div>{{description}}</div>
+        </div>
+        <div class="texts-characteristics">
+          <p class="texts-h1">Характеристики</p>
+          <div>{{characteristics}}</div>
+        </div>
+      </div>
+      <div class="reviews-section">
+        <div class="reviews-header">
+          <p class="texts-h1">Відгуки (<span class="reviews-number">{{reviews_count}}</span>)</p>
+          <button class="write-review">Написати відгук</button>
+          <button class="send-review" style="display: none">Відправити відгук</button>
+        </div>
+
+        <form id="make-review-form" style="display: none">
+          <div class="field">
+            <label for="rating">Рейтинг: </label>
+            <select id="rating" name="rating" required>
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="review">Відгук: </label>
+            <textarea id="review" name="review" cols="30" rows="10" required></textarea>
+          </div>
+        </form>
+
+        <div class="reviews-container">
+          {{reviews}}
+
+          <!-- <div class="reviews-review">
+            <div class="review-header">
+              <div class="name-side">
+                <p class="name">Name Surname</p>
+                <p class="review-rating">*****</p>
+              </div>
+              <div class="date-side">06/06/2005</div>
+            </div>
+            <div class="review-content">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusantium adipisci earum illum cupiditate eum quaerat odit error porro quas et maiores quo nulla doloremque, quibusdam omnis commodi molestiae iste sunt?</div>
+          </div> -->
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-section">
+    <p>Розробник: Антон Лукімський</p>
+  </footer>
+
+  <script src="core.js"></script>
+  <script>
+
+    const sliderDisplay = document.querySelector('.slider-display'),
+          sliderItems = document.querySelector('.slider-items'),
+          sliderItemWidth = document.querySelector('.div-image').offsetWidth
+
+    const prevArrow = document.querySelector('.arrow-left'),
+          nextArrow = document.querySelector('.arrow-right'),
+          pagination = document.querySelector('.slider-pagination'),
+          paginationItems = pagination.querySelectorAll('.div-image')
+
+    let currentIndex = 0
+    prevArrow.classList.add('disabled')
+
+    prevArrow.addEventListener('click', () => {
+      currentIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+      slideToIndex(currentIndex);
+    })
+
+    nextArrow.addEventListener('click', () => {
+      currentIndex = currentIndex < sliderItems.children.length - 1 ? currentIndex + 1 : currentIndex
+      slideToIndex(currentIndex)
+    })
+
+    paginationItems.forEach((item, index) => {
+      item.addEventListener('click', () => {
+        currentIndex = index
+        slideToIndex(currentIndex)
+      })
+    })
+
+    function slideToIndex(index) {
+      const margin = -index * sliderItemWidth
+      sliderItems.firstElementChild.style.marginLeft = `${margin}px`
+
+      if(index === 0) {
+        prevArrow.classList.add('disabled')
+        nextArrow.classList.remove('disabled')
+      }
+      else if(index === sliderItems.children.length - 1) {
+        prevArrow.classList.remove('disabled')
+        nextArrow.classList.add('disabled')
+      }
+      else {
+        prevArrow.classList.remove('disabled')
+        nextArrow.classList.remove('disabled')
+      }
+
+      // update active classes on pagination items
+      paginationItems.forEach((item, i) => {
+        if (i === index) item.classList.add('active')
+        else item.classList.remove('active')
+      })
+    }
+
+  </script>
+  <script>
+    const itemId = new URL(location.href).searchParams.get('id')
+
+    // CREATE REVIEW FORM
+
+    const writeReviewBtn = document.querySelector('.write-review'),
+          sendReviewBtn = document.querySelector('.send-review'),
+          makeReviewForm = document.querySelector('#make-review-form')
+
+    writeReviewBtn.onclick = () => {
+      if(localStorage.getItem('account-id') === 'null') {
+        const answer = confirm('Щоб залишати відгуки треба увійти в аккаунт. Ви хочете це зробити?')
+        if(answer) {
+          location.href = 'sign-log-in'
+          return
+        }
+
+        return
+      }
+
+      makeReviewForm.style.display = ''
+      writeReviewBtn.style.display = 'none'
+      sendReviewBtn.style.display = ''
+    }
+    sendReviewBtn.onclick = () => {
+      makeReviewForm.dispatchEvent(new Event('submit'))
+    }
+
+    makeReviewForm.onsubmit = async event => {
+      event.preventDefault()
+
+      const user = JSON.parse(localStorage.getItem('account'))
+
+      const ratingNode = makeReviewForm.querySelector('select#rating'),
+            reviewNode = makeReviewForm.querySelector('textarea#review'),
+            reviewTime = +new Date(),
+            urlQueryString = [
+              ['id', itemId],
+              ['rating', ratingNode.value],
+              ['review', reviewNode.value],
+              ['time', reviewTime],
+              ['user-name', user.name],
+              ['user-surname', user.surname]
+            ]
+
+      if(reviewNode.value === '') {
+        alert('Ви не написали відгук, напишіть й потім відправте')
+        return
+      }
+
+      const response = await fetch('add-item-review?' + urlQueryString.map(itm => itm.join('=')).join('&'))
+
+      if(response.status === 200) alert('Відгук залишино')
+      else if(response.status === 500) {
+        alet('Щось пішло не так, спробуйте знову')
+        return
+      }
+
+      const rating = []
+
+      for(let i = 0; i < 5; i++) {
+        if(i < +ratingNode.value) rating.push('★')
+        else rating.push('☆')
+      }
+
+      const newReview = document.createElement('div')
+      newReview.classList.add('reviews-review')
+      newReview.innerHTML = `
+        <div class="review-header">
+          <div class="name-side">
+            <p class="name">${user.name} ${user.surname}</p>
+            <p class="review-rating">${rating.join('')}</p>
+          </div>
+          <div class="date-side">${new Date(reviewTime).toLocaleDateString()}</div>
+        </div>
+        <div class="review-content">${reviewNode.value}</div>
+      `
+
+      const reviewsContainer = document.querySelector('.reviews-container')
+      reviewsContainer.insertAdjacentElement('afterbegin', newReview)
+
+      makeReviewForm.reset()
+      makeReviewForm.style.display = 'none'
+      sendReviewBtn.style.display = 'none'
+      writeReviewBtn.style.display = ''
+
+      document.querySelector('.reviews-section span.reviews-number').innerText++
+    }
+  </script>
+  <script src="add_item_to_cart.js"></script>
+  <script>
+    initAddToCart()
+  </script>
+  <script>
+    // MAKE BUY REQUEST
+
+    const buyButton = document.querySelector('#buy-item'),
+          title = document.querySelector('#item-title').innerText,
+          price = document.querySelector('#item-price').innerText,
+          item_id = document.querySelector('.add-to-buy').dataset.buyItemId
+    
+    buyButton.addEventListener('click', () => {
+      if(confirm('Ви впевнені що хочете купити цей товар?')) {
+        fetch('make-buy-request', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            item_id: {
+              title: title,
+              price: price,
+              count: 1
+            }
+          })
+        })
+          .then(async res => {
+            if(res.status === 200) alert('Замовлення відправлено')
+            else if(res.status === 500) {
+              alert('Щось пішло не так, спробуйте знову')
+              console.log(await res.text())
+            }
+          })
+      }
+    })
+  </script>
+
+  {{admin-tools-script}}
+</body>
+</html>

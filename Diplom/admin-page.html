@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сторінка адміністратора</title>
+  <link rel="stylesheet" href="core.css">
+  <link rel="stylesheet" href="default.css">
+  <link rel="stylesheet" href="items-view.css"> <!-- подключение цсс файла -->
+  <link rel="stylesheet" href="forms.css"> <!-- подключение цсс файла -->
+  <link rel="stylesheet" href="dropdown_module/dropdown.css">
+  <style>
+    .content-container {
+      display: flex;
+    }
+
+    .main-inner-container {
+      width: 50%;
+      padding: 20px;
+    }
+
+    .page-titles {
+      margin-bottom: 20px;
+    }
+
+    .items-list .item-card .description .title {
+      font-size: 20px;
+    }
+    .items-list .item-card .description .price,
+    .items-list .item-card .description .icons-container {
+      font-size: 18px;
+    }
+
+    .items-list .item-card .icons-container > * {
+      cursor: pointer;
+    }
+
+    /* other */
+
+    .main-subcontainer {
+      width: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+      border-radius: 5px;
+      border: 1px solid #000;
+      margin-bottom: 20px;
+    }
+
+    #search {
+      margin-bottom: 10px;
+    }
+
+    .available-items-container {
+      padding: 20px;
+    }
+  
+    .available-items-container-inner {
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      padding: 20px;
+    }
+
+    .items-list .item-card {
+      width: 31%;
+    }
+
+    @media (max-width: 700px) {
+      .content-container {
+        display: block;
+      }
+
+      .main-inner-container {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <main class="content-container">
+
+    <div class="available-items-container main-inner-container">
+      <h2 class="page-titles">Поточні товари</h2>
+
+      <input id="search" type="text" name="search" placeholder="пошук товару" required> <!-- вводчик текста для поиска товара по названию -->
+
+      <div class="available-items-container-inner main-subcontainer">
+        <div class="shopping-tools">
+          
+          <div class="dropdown">
+            <button class="dropdown-toggle">Категорії</button>
+            <div id="categories-dropdown" class="dropdown-content" style="width: 200px"></div>
+          </div>
+      
+          <div class="sorting">
+            <div class="sorting-type">
+              <label for="sorting-type-select">Сортування за</label>
+              <select id="sorting-type-select">
+                <option selected disabled>без сортування</option>
+                <option value="price">ціною</option>
+                <option value="rating">рейтингом</option>
+              </select>
+            </div>
+      
+            <div class="sorting-direktion sort-up">
+              <p class="up">↑</p>
+              <p class="down">↓</p>
+            </div>
+          </div>
+        </div>
+      
+        <div id="items-list" class="items-list"></div>
+      </div>
+
+      <form id="categories-deleting" class="main-subcontainer">
+        <div class="form-field">
+          <label>Видалити категорії</label>
+          
+          <div class="dropdown">
+            <button type="button" class="dropdown-toggle">Категорії</button>
+            <div id="categories-delete-dropdown" class="dropdown-content" style="width: 200px"></div>
+          </div>
+
+          <button class="submit-button" type="submit">Видалити</button>
+        </div>
+      </form>
+
+      <form id="categories-adding" class="main-subcontainer">
+        <div class="form-field">
+          <label>Додати категорію</label>
+          
+          <input type="text" placeholder="Назва">
+  
+        </div>
+        <button class="submit-button" type="submit">Додати</button>
+      </form>
+    </div>
+  </div>
+
+    <div class="add-item-container main-inner-container">
+      <h2 class="page-titles">Додати товар</h2>
+
+      <form id="create-item-form" class="main-subcontainer">
+        <div class="form-field">
+          <label for="item_title">Назва товару</label>
+          <input id="item_title" name="item_title" type="text" placeholder="Назва" required>
+        </div>
+        <div class="form-field">
+          <label for="item_images">Зображення товару</label>
+          <input id="item_images" name="item_images" type="file" multiple accept="image/*">
+        </div>
+        <div class="form-field">
+          <label for="item_description">Опис товару</label>
+          <textarea name="item_description" id="item_description" cols="30" rows="10">Опис ...</textarea>
+        </div>
+        <div class="characteristics-list">
+          <p class="title">Характеристики</p>
+          <div class="form-field-field">
+            <input name="ch_1_name" type="text" placeholder="Назва характеристики">
+             <p>:</p>
+            <input name="ch_1_value" type="text" placeholder="Значення характеристики">
+            <button class="cancel-button" type="button" onclick="document.querySelector('.form-field-field').remove()">X</button>
+          </div>
+          <button class="add-characteristic submit-button" type="button">додати характеристику</button>
+        </div>
+        <div class="form-field">
+          <label for="item_price">Ціна товару (₴)</label>
+          <input id="item_price" name="item_price" type="number" placeholder="4999" required>
+        </div>
+        <div class="form-field">
+          <label for="item_shipping">Доставка товару</label>
+          <textarea name="item_shipping" id="item_shipping" cols="30" rows="10">Доставка ...</textarea>
+        </div>
+        <div class="form-field">
+          <label for="item_guaranty">Гарантія товару</label>
+          <textarea name="item_guaranty" id="item_guaranty" cols="30" rows="10">Гарантія ...</textarea>
+        </div>
+
+        <div class="dropdown">
+          <button class="dropdown-toggle" type="button">Категорії</button>
+          <div id="categories-for-item-dropdown" class="dropdown-content" style="width: 200px"></div>
+        </div>
+
+        <button class="submit-button" type="submit">Додати</button>
+      </form>
+    </div>
+
+  </main>
+
+  <script src="core.js"></script>
+  <script src="dropdown_module/dropdown.js"></script>
+  <script src="itemsSorting.js"></script>
+  <script>
+
+    const sessionToken = new URLSearchParams(location.search).get('session-token'),
+          shoppingItemsNode = document.querySelector('#items-list')
+
+    function shoppingItemToHTMLElement(itemObj, itemId) {
+      const card = document.createElement('div')
+      card.classList.add('item-card')
+
+      card.dataset.categories = itemObj.categories?.join(',') ?? 'null'
+      card.dataset.itemId = undefined
+      if(itemId) {
+        card.dataset.itemId = itemId
+      }
+
+      let ratingString = ''
+
+      for(let i = 0; i < 5; i++) {
+        if(i < +itemObj.rating) ratingString += '★'
+        else ratingString += '☆'
+      }
+
+      ratingString += '<br> (' + itemObj.reviews.length + ' відгук'
+
+      const reviewsLastNumber = itemObj.reviews.length % 10,
+            reviewsLastTwoNumbers = itemObj.reviews.length % 100
+
+      if(reviewsLastNumber === 0 || (4 < reviewsLastNumber && reviewsLastNumber < 10) || (10 <= reviewsLastTwoNumbers && reviewsLastTwoNumbers <= 20)) ratingString += 'ів'
+      else if(1 < reviewsLastNumber && reviewsLastNumber < 5) ratingString += 'а'
+
+      ratingString += ')'
+
+      card.innerHTML = `
+        <div class="img div-image" style="background-image: url(${itemObj.images[0]})"></div>
+        <div class="description">
+          <a class="title" href="/item-page?id=${itemId}&edit-mode=true&session-token=${sessionToken}">${itemObj.title}</a>
+          <div class="raiting">${ratingString}</div>
+          <div class="price-container">
+            <p class="price">${itemObj.price} ₴</p>
+            <div class="icons-container">
+              <div class="delete-shopping-item">🗑️</div>
+            </div>
+          </div>
+        </div>
+      `
+
+      return card
+    }
+
+    fetch('/shopping_items.json')
+    .then(response => response.text())
+    .then(data => {
+      const shoppingItems = JSON.parse(data)
+
+      for(const key in shoppingItems.items) {
+        shoppingItemsNode.insertAdjacentElement('beforeEnd', shoppingItemToHTMLElement(shoppingItems.items[key], key))
+      }
+
+      mainScritp()
+    })
+
+    function mainScritp() {
+      
+      sortItemsScript()
+
+      const searchNode = document.querySelector('#search'),
+            itemsContainer = document.querySelector('#items-list')
+
+      searchNode.addEventListener('input', () => {
+        const items = Array.from(itemsContainer.querySelectorAll('.item-card'))
+
+        items.sort((a, b) => {
+          const titleA = a.querySelector('.description a.title').innerText,
+                titleB = b.querySelector('.description a.title').innerText,
+                searchRequest = searchNode.value
+
+          const aDistance = levenshteinDistance(searchRequest, titleA),
+                bDistance = levenshteinDistance(searchRequest, titleB)
+          
+          return aDistance - bDistance
+        })
+
+        itemsContainer.innerHTML = ''
+        items.forEach(itm => shoppingItemsNode.appendChild(itm))
+      })
+
+      shoppingItemsNode.addEventListener('click', event => {
+        if(event.target.classList.contains('delete-shopping-item')) {
+          const path = event.path || event.composedPath(),
+                itemCard = path.find(itm => itm.classList.contains('item-card')),
+                itemTitle = itemCard.querySelector('p.title').innerHTML
+
+          const answer = confirm('Ви точно хочете видалити товар ' + itemTitle + '?\nЦя дія незвотня, всі коментарі й поточні закази цього товару будуть видалені!')
+
+          if(answer) {
+            fetch('/delete-shopping-item?item-id=' + itemCard.dataset.itemId + '&session-token=' + sessionToken)
+            .then(response => {
+              if(response.status === 200) {
+                alert('Товар видалений')
+                location.reload()
+              }
+              else if(response.status === 404) response.text().then(alert)
+              else if(response.status === 401) {
+                response.text().then(alert)
+                location.href = 'login-admin-page'
+              }
+              else alert('Сталася помилка, спробуйте ще раз')
+            })
+          }
+        }
+      })
+
+      // FILTERING BY CATEGORIES
+
+    const categoriesDropdown = document.querySelector('#categories-dropdown')
+    
+    categoriesToHTML()
+      .then(html => {
+        categoriesDropdown.innerHTML = html
+
+        const cards = Array.from(cardsContainer.querySelectorAll('.item-card'))
+
+        setDropdown(categoriesDropdown, categories => {
+          if(categories.length === 0) {
+            cards.forEach((card) => cardsContainer.appendChild(card))
+            return
+          }
+          cardsContainer.innerHTML = ''
+
+          cards.filter(card => {
+            const cardCategories = card.dataset.categories.split(',')
+            return categories.find(category => cardCategories.includes(category)) !== undefined ? true : false
+          }).forEach((card) => cardsContainer.appendChild(card))
+
+        })
+
+        const deleteCategoriesDropdown = document.querySelector('#categories-delete-dropdown'),
+              addCateroriesToItem = document.querySelector('#categories-for-item-dropdown')
+
+        deleteCategoriesDropdown.innerHTML = html
+        addCateroriesToItem.innerHTML = html
+
+        setDropdownToggle(deleteCategoriesDropdown.previousElementSibling)
+        setDropdownToggle(addCateroriesToItem.previousElementSibling)
+
+        const deleteCateroriesForm = document.querySelector('#categories-deleting')
+        deleteCateroriesForm.addEventListener('submit', async e => {
+          e.preventDefault()
+
+          const checkers = Array.from(deleteCateroriesForm.querySelectorAll('input[type="checkbox"]')).filter(node => node.checked),
+                ress = []
+                
+          for(const node of checkers) {
+            ress.push(await fetch('delete-category?category=' + node.value + '&sessionToken=' + sessionToken))
+          }
+
+          const notOk = ress.find(itm => itm.status !== 200)
+          if(notOk !== undefined) {
+            alert('Щось пішло не так, спробуйте знову')
+            console.log(await notOk.text())
+            return
+          }
+
+          alert('Категорії успішно видалені')
+          location.reload()
+        })
+
+        const addCateroriesForm = document.querySelector('#categories-adding')
+        addCateroriesForm.addEventListener('submit', e => {
+          e.preventDefault()
+          
+          const category = addCateroriesForm.querySelector('input').value
+
+          fetch('add-category?category=' + category + '&sessionToken=' + sessionToken)
+            .then(async res => {
+              if(res.status === 200) {
+                alert('Категорію додано')
+                location.reload()
+              }
+              else if(res.status === 500) {
+                alert('Щось пішло не так, спробуйте знову')
+                console.log(await res.text())
+              }
+            })
+        })
+      })
+    }
+
+    // ADD OR DELETE CHARACKTERISTIC SCRIPT
+
+    const characteristicsList = document.querySelector('.characteristics-list'),
+          addCharacteristicButton = characteristicsList.querySelector('.add-characteristic')
+
+    let characteristicCount = 1
+
+    addCharacteristicButton.addEventListener('click', () => {
+      const characteristicBlock = createCharacteristicBlock()
+      characteristicsList.insertBefore(characteristicBlock, addCharacteristicButton)
+    })
+
+    function createCharacteristicBlock() {
+      const characteristicBlock = document.createElement('div')
+      characteristicBlock.classList.add('form-field-field')
+
+      const nameInput = document.createElement('input')
+      nameInput.type = 'text'
+      nameInput.name = `ch_${characteristicCount}_name`
+      nameInput.placeholder = 'Назва характеристики'
+
+      const colonP = document.createElement('p')
+      colonP.textContent = ':'
+
+      const valueInput = document.createElement('input')
+      valueInput.type = 'text'
+      valueInput.name = `ch_${characteristicCount}_value`
+      valueInput.placeholder = 'Значення характеристики'
+
+      const deleteButton = document.createElement('button')
+      deleteButton.classList.add('cancel-button')
+      deleteButton.type = 'button'
+      deleteButton.textContent = 'X'
+      deleteButton.addEventListener('click', () => {
+        characteristicBlock.remove()
+      })
+
+      characteristicBlock.appendChild(nameInput)
+      characteristicBlock.appendChild(colonP)
+      characteristicBlock.appendChild(valueInput)
+      characteristicBlock.appendChild(deleteButton)
+
+      characteristicCount++
+
+      return characteristicBlock
+    }
+
+    // CREATING ITEM FORM
+    
+    const form = document.querySelector('#create-item-form')
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault()
+
+      const formData = {}
+
+      const titleField = form.querySelector('#item_title')
+      formData.title = titleField.value
+
+      const imagesField = form.querySelector('#item_images')
+
+      formData.images = []
+      for(const file of imagesField.files) {
+        formData.images.push({
+          name: file.name,
+          type: file.type,
+          content: Array.from(
+            new Int8Array(await file.arrayBuffer())
+          )
+        })
+      }
+
+      const descriptionField = form.querySelector('#item_description')
+      formData.description = descriptionField.value
+
+      const priceField = form.querySelector('#item_price')
+      formData.price = priceField.value
+
+      const shippingField = form.querySelector('#item_shipping')
+      formData.shipping = shippingField.value
+
+      const guarantyField = form.querySelector('#item_guaranty')
+      formData.guaranty = guarantyField.value
+
+      const characteristicFields = form.querySelectorAll('.form-field-field input')
+      formData.characteristics = Array.from(characteristicFields).reduce((characteristics, field) => {
+
+        if(field.value !== '') {
+
+          const f_type = field.name.match(/_\D+$/g, '')[0] === '_name' ? 'name' : 'value',
+                f_id = field.name.replace(/_\D+$/, '')
+
+          if(f_id in characteristics === false) {
+            characteristics[f_id] = {}
+            characteristics[f_id][f_type] = field.value
+          }
+          else characteristics[f_id][f_type] = field.value
+        }
+
+        return characteristics
+      }, {})
+
+      const categories = Array.from(form.querySelectorAll('#categories-for-item-dropdown input[type="checkbox"]'))                          
+      formData.categories = categories.filter(node => node.checked).map(node => node.value)
+
+      fetch('/add-shopping-item?session-token=' + sessionToken, {
+        method: 'POST',
+        body: JSON.stringify(formData)
+      })
+      .then(response => {
+        
+        if(response.status === 200) {
+          alert('Товар додано в базу даних')
+          location.reload()
+        }
+        else if(response.status === 401) {
+          alert('Ви не авторизовані')
+          location.href = 'login-admin-page'
+        }
+        else alert('Щось пішло не так, спробуйте знову')
+      })
+    })
+
+  </script>
+</body>
+</html>

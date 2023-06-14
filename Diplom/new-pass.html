@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Новий пароль</title>
+  <link rel="stylesheet" href="core.css">
+  <link rel="stylesheet" href="default.css">
+  <link rel="stylesheet" href="forms.css">
+  <style>
+    body {
+      padding: 5% 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    form {
+      max-width: 500px;
+      width: 100%;
+      margin: 0 20px;
+      height: max-content;
+    }
+  </style>
+</head>
+<body>
+  
+  <form id="recovery-pass">
+    <h2 class="form-title">Відновлення пароля</h2>
+    <div class="form-field">
+      <label for="new-pass">Новий пароль</label>
+      <input id="new-pass" name="pass" type="password" required>
+    </div>
+
+    <div class="form-field">
+      <label for="repeat-new-pass">Повтор пароля</label>
+      <input id="repeat-new-pass" name="pass" type="password" required>
+    </div>
+
+    <button class="submit-button" type="submit">Змінити</button>
+  </form>
+
+  <script>
+    const recoveryPassForm = document.querySelector('#recovery-pass')
+    recoveryPassForm.addEventListener('submit', e => {
+      e.preventDefault()
+
+      const newPass = recoveryPassForm.querySelector('#new-pass').value,
+            repeatNewPass = recoveryPassForm.querySelector('#repeat-new-pass').value
+
+      if(newPass !== repeatNewPass) {
+        alert('Паролі не збігаються')
+        return
+      }
+ 
+      const url = new URL(location.href)
+
+      fetch('set-new-pass?account-id=' + url.searchParams.get('account-id') + '&temp-token=' + url.searchParams.get('temp-token') + '&pass=' + newPass)
+        .then(async res => {
+          if(res.status === 200) {
+            alert('Пароль змінено')
+            location.href = 'sign-log-in'
+          }
+          else {
+            alert('Щось пішло не так, спробуйте знову')
+            console.log(await res.text())
+          }
+        })
+    })
+  </script>
+</body>
+</html>

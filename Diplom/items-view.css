@@ -1,0 +1,129 @@
+.shopping-tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.shopping-tools .sorting {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.shopping-tools .sorting .sorting-type select {height: 22px}
+
+.shopping-tools .sorting .sorting-direktion {
+  margin-left: 10px;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 1000vw;
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.shopping-tools .sorting .sorting-direktion p {
+  margin-top: -4px;
+}
+
+.shopping-tools .sorting .sorting-direktion.sort-up p.up {display: block}
+.shopping-tools .sorting .sorting-direktion.sort-up p.down {display: none}
+
+.shopping-tools .sorting .sorting-direktion.sort-down p.up {display: none}
+.shopping-tools .sorting .sorting-direktion.sort-donw p.down {display: block}
+
+.shopping-tools .categories {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.items-list {
+  /* height: 100vh; */
+  display: flex;
+  align-items: center;
+  /* padding-top: 40px;
+  padding-bottom: 40px; */
+  flex-wrap: wrap;
+}
+
+.items-list .item-card {
+  width: 18%;
+  height: 300px;
+  border: 1px solid #727272;
+  padding: 20px;
+  margin-right: 2%;
+  margin-bottom: 20px;
+
+  text-decoration: none;
+  color: #333;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+.item-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.items-list .item-card .img {
+  width: 100%;
+  height: 50%;
+}
+
+.items-list .item-card .description .title {font-size: 28px}
+
+.items-list .item-card .description .raiting {margin-bottom: 20px}
+
+.items-list .item-card .description .price-container {
+  font-size: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.items-list .item-card .description .price-container .icons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.items-list .item-card .description .price-container .icons-container .delete {
+  cursor: pointer;
+}
+
+select {
+  border-radius: 4px;
+}
+
+@media (max-width: 1000px) {
+  .items-list .item-card {
+    width: 30%;
+  }
+}
+
+@media (max-width: 600px) {
+  .items-list .item-card {
+    width: 47%;
+  }
+}
+
+@media (max-width: 500px) {
+  .items-list .item-card .description .price-container {
+    display: block;
+  }
+
+  .items-list .item-card .description .price-container .icons-container {
+    justify-content: start;
+  }
+
+  .items-list .item-card {
+    height: 350px;
+  }
+}

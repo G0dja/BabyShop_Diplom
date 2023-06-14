@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Аккаунт</title>
+  <link rel="stylesheet" href="default.css">
+  <link rel="stylesheet" href="core.css">
+  <link rel="stylesheet" href="buttons.css">
+  <style>
+    .main-data {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .main-data .field {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .main-data .label {
+      display: inline-block;
+      width: 15%;
+      text-align: left;
+    }
+
+    .main-data .value {
+      display: inline-block;
+    }
+
+    input {
+      width: auto;
+    }
+  </style>
+</head>
+<body>
+  
+  <header class="page-section"> <!-- хедер-контейнер -->
+    <a href="/" class="logo header-item"> <!-- контейнер для логотипа -->
+      <img src="images/logo.png" alt="логотип"> <!-- картинка логотипа -->
+    </a>
+
+    <div class="search-bar header-item"> <!-- контейнер для вкладки поиска -->
+      <form class="not-form" action="/"> <!-- форма -->
+        <input id="search" type="text" name="search" placeholder="пошук товару"> <!-- вводчик текста для поиска товара по названию -->
+        <button type="submit">пошук</button> <!-- кнопка для поиска -->
+      </form>
+    </div>
+
+    <div class="account-tools header-item"> <!-- контейнер для элементов аккаунта -->
+      <a href="account" class="account-link">
+        <img src="images/account-30.png" alt="account">
+      </a> <!-- ссылка на страницу аккаунта -->
+      <a href="cart" class="shopping-cart-link">
+        <img src="images/cart-30.png" alt="cart">
+      </a> <!-- ссылка на страницу выбраных к покупке товаров -->
+    </div>
+  </header>
+
+  <main class="page-section">
+
+    <div class="main-data">
+
+      <div id="name" class="field">
+        <p class="label">Ім'я:</p>
+        <input class="value" type="text" value="name" disabled>
+      </div>
+
+      <div id="surname" class="field">
+        <p class="label">Прізвище:</p>
+        <input class="value" type="text" value="surname" disabled>
+      </div>
+
+      <div id="description" class="field">
+        <p class="label">Опис:</p>
+        <input class="value" type="text" value="description" disabled>
+      </div>
+
+      <div id="address" class="field">
+        <p class="label">Адреса:</p>
+        <input class="value" type="text" value="address" disabled>
+      </div>
+
+      <div id="email" class="field">
+        <p class="label">Електронна адреса:</p>
+        <input class="value" type="email" value="email" disabled>
+      </div>
+
+      <div id="pass" class="field">
+        <p class="label">Пароль:</p>
+        <input class="value" type="text" value="password" disabled>
+      </div>
+
+    </div>
+
+    <div class="tools">
+      <button id="btn_edit_acc">Редагувати</button>
+      <button id="btn_save_acc" style="display: none">Зберегти</button>
+      <button id="btn_logout">Вийти</button>
+      <button id="btn_delete_acc" class="critical-button" onclick="alert('Аккаунт видаляється, це може зайняти якийсь час.')">Видалити аккаунт</button>
+    </div>
+
+  </main>
+
+  <footer class="page-section">
+    <p>Розробник: Антон Лукімський</p>
+  </footer>
+
+  <script src="core.js"></script>
+  <script>
+
+    // ACCOUNT DATA SCRIPT
+
+    
+    const accountId = new URL(location.href).searchParams.get('id')
+
+    if(accountId === null) {
+      alert('Ви не авторизувалися')
+      location.href = 'sign-log-in'
+    }
+
+    (async () => {
+
+      if(localStorage.getItem('account') === null) {
+
+        const response = await fetch('/get-account?id=' + accountId),
+              data = await response.text()
+
+        if(response.status === 200) localStorage.setItem('account', data)
+        else if(response.status === 500) {
+          alert('Щось пішло не так, спробуйте перезайти в аккаунт')
+          console.log(data)
+        }
+      }
+
+      const accountObj = JSON.parse(localStorage.getItem('account'))
+
+      for(const node of document.querySelectorAll('.main-data .field')) {
+        node.querySelector('.value').value = accountObj[node.id]
+      }
+    })()
+
+    if(localStorage.getItem('account-id') === null) localStorage.setItem('account-id', new URL(location.href).searchParams.get('id'))
+
+
+    document.querySelector('#btn_logout').onclick = () => {
+      localStorage.removeItem('account')
+      localStorage.removeItem('account-id')
+      localStorage.removeItem('user-cart')
+      location.href = 'sign-log-in'
+    }
+
+    document.querySelector('#btn_delete_acc').onclick = async () => {
+      const isDelete = confirm('Ви точно хочете безповоротно видалити аккаунт, його відновлення буде неможливе!')
+
+      let isConfirmString = ''
+      if(isDelete) isConfirmString = prompt('Введіть \"видалити аккаунт\"')
+
+      if(isDelete && isConfirmString === 'видалити аккаунт') {
+        const response = await fetch('delete-account?id=' + localStorage.getItem('account-id'))
+        if(response.status === 200) {
+          alert('Аккаунт видалено')
+          localStorage.removeItem('account')
+          localStorage.removeItem('account-id')
+          location.href = 'sign-log-in'
+        }
+        else alert('Щось пішло не так, спробуйте знову')
+      }
+      else {
+        alert('Операція видалення аккаунта припинена')
+      }
+    }
+  </script>
+
+  <script>
+
+    // ACCOUNT CHANGE DATA SCRIPT
+
+    const acc_data = {}
+
+    const editBtn = document.getElementById('btn_edit_acc'),
+          saveBtn = document.getElementById('btn_save_acc')
+
+    editBtn.addEventListener('click', () => {
+
+      const valueElems = document.querySelectorAll('.value')
+
+      valueElems.forEach(valueElem => valueElem.disabled = false)
+
+      editBtn.style.display = 'none'
+      saveBtn.style.display = 'inline-block'
+    })
+
+    saveBtn.addEventListener('click', () => {
+
+      const inputFields = document.querySelectorAll('.field')
+      let queryObj = []
+
+      inputFields.forEach(inputField => {
+
+        const inputElem = inputField.querySelector('input')
+
+        queryObj.push([inputField.id, inputElem.value])
+
+        acc_data[inputField.id] = inputElem.value
+
+        inputElem.disabled = true
+      })
+
+      saveBtn.style.display = 'none'
+      editBtn.style.display = 'inline-block'
+
+      queryObj.push(['id', localStorage.getItem('account-id')])
+
+      const queryString = queryObj.map(itm => itm.join('=')).join('&')
+
+      fetch('set-account-properties?' + queryString)
+      .then(response => {
+        if(response.status === 200) {
+
+          const accountObj = JSON.parse(localStorage.getItem('account'))
+          for(const [key, value] of queryObj) accountObj[key] = value
+          localStorage.setItem('account', JSON.stringify(accountObj))
+
+          alert('Дані збережено')
+        }
+        else if(response.status === 500) {
+          alert('Щось пішло не так, спробуйте знову')
+        }
+      })
+    })
+
+  </script>
+
+</body>
+</html>
