@@ -7,8 +7,8 @@
 ## Посилання на сайт
 **Сайт:** http://ec2-16-170-228-167.eu-north-1.compute.amazonaws.com/
 
-**Адмін панель:** http://ec2-16-170-228-167.eu-north-1.compute.amazonaws.com/login-admin-page <p>
-Пароль до адмін панелі: 22242628
+**Адмін-панель:** http://ec2-16-170-228-167.eu-north-1.compute.amazonaws.com/login-admin-page <p>
+Пароль до адмін-панелі: 22242628
 
 
 
