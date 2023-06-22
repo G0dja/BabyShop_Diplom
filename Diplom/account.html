@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Аккаунт</title>
+  <link rel="stylesheet" href="default.css">
+  <link rel="stylesheet" href="core.css">
+  <link rel="stylesheet" href="buttons.css">
+  <style>
+    main {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .main__side {
+      width: 49%;
+    }
+
+    .main-data {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .main-data .field {
+      margin-bottom: 20px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .main-data .label {
+      display: inline-block;
+      width: 178px;
+      text-align: left;
+      flex-shrink: 0;
+    }
+
+    .main-data .value {
+      display: inline-block;
+    }
+
+    input {
+      width: 100%;
+    }
+
+    .orders-windows {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #000;
+    }
+
+    .order {
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .order p {
+      margin-bottom: 5px;
+    }
+
+    .order ol {
+      margin-top: 5px;
+    }
+
+    .order .delete-order {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  
+  <header class="page-section"> <!-- хедер-контейнер -->
+    <a href="/" class="logo header-item"> <!-- контейнер для логотипа -->
+      <img src="images/logo.png" alt="логотип"> <!-- картинка логотипа -->
+    </a>
+
+    <div class="search-bar header-item"> <!-- контейнер для вкладки поиска -->
+      <form class="not-form" action="/"> <!-- форма -->
+        <input id="search" type="text" name="search" placeholder="пошук товару"> <!-- вводчик текста для поиска товара по названию -->
+        <button type="submit">пошук</button> <!-- кнопка для поиска -->
+      </form>
+    </div>
+
+    <div class="account-tools header-item"> <!-- контейнер для элементов аккаунта -->
+      <a href="account" class="account-link">
+        <img src="images/account-30.png" alt="account">
+      </a> <!-- ссылка на страницу аккаунта -->
+      <a href="cart" class="shopping-cart-link">
+        <img src="images/cart-30.png" alt="cart">
+      </a> <!-- ссылка на страницу выбраных к покупке товаров -->
+    </div>
+  </header>
+
+  <main class="page-section">
+
+    <div class="main__side">
+      <div class="main-data">
+
+        <div id="name" class="field">
+          <p class="label">Ім'я:</p>
+          <input class="value" type="text" value="name" disabled>
+        </div>
+  
+        <div id="surname" class="field">
+          <p class="label">Прізвище:</p>
+          <input class="value" type="text" value="surname" disabled>
+        </div>
+  
+        <div id="description" class="field">
+          <p class="label">Опис:</p>
+          <input class="value" type="text" value="description" disabled>
+        </div>
+  
+        <div id="address" class="field">
+          <p class="label">Адреса:</p>
+          <input class="value" type="text" value="address" disabled>
+        </div>
+  
+        <div id="email" class="field">
+          <p class="label">Електронна адреса:</p>
+          <input class="value" type="email" value="email" disabled>
+        </div>
+  
+        <div id="pass" class="field">
+          <p class="label">Пароль:</p>
+          <input class="value" type="text" value="password" disabled>
+        </div>
+  
+      </div>
+  
+      <div class="tools">
+        <button id="btn_edit_acc">Редагувати</button>
+        <button id="btn_save_acc" style="display: none">Зберегти</button>
+        <button id="btn_logout">Вийти</button>
+        <button id="btn_delete_acc" class="critical-button" onclick="alert('Аккаунт видаляється, це може зайняти якийсь час.')">Видалити аккаунт</button>
+      </div>
+    </div>
+
+    <div class="main__side">
+
+      <style>
+        .tab-container {
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          overflow: hidden;
+        }
+
+        .tab {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+        }
+
+        .tab-button {
+          cursor: pointer;
+          padding: 10px 20px;
+          border-radius: 3px;
+          transition: background-color 0.1s ease;
+        }
+
+        .tab-button:hover {
+          opacity: .8;
+        }
+
+        .tab-button.active {
+          background-color: #3d8840;
+        }
+
+        .tab-content {
+          padding: 20px;
+        }
+      </style>
+      
+      <div class="tab-container">
+        <div class="tab">
+          <button class="tab-button active" onclick="openTab(event, 'tab-1')">Замовлення</button>
+          <button class="tab-button" onclick="openTab(event, 'tab-2')">Завершені замовлення</button>
+        </div>
+        <div class="tab-content" id="tab-1">
+
+          <!-- <div class="order">
+            <p>Ідентифікатор: 34435</p>
+            <p>Статус: ВІДКРИТИЙ</p>
+            <p>Зміст:</p>
+            <ol>
+              <li>Назва, 8 штук (5 ₴ за одиницю) - 13245 ₴</li>
+              <li>Назва, 8 штук (5 ₴ за одиницю) - 13245 ₴</li>
+              <li>Назва, 8 штук (5 ₴ за одиницю) - 13245 ₴</li>
+            </ol>
+            <p>Остаточна ціна: 15 ₴</p>
+          </div> -->
+        </div>
+        <div class="tab-content" id="tab-2" style="display:none"></div>
+      </div>
+
+      <script>
+        function openTab(evt, tabName) {
+  var i, tabContent, tabButton;
+  tabContent = document.getElementsByClassName("tab-content");
+  for (i = 0; i < tabContent.length; i++) {
+    tabContent[i].style.display = "none";
+  }
+  tabButton = document.getElementsByClassName("tab-button");
+  for (i = 0; i < tabButton.length; i++) {
+    tabButton[i].className = tabButton[i].className.replace(" active", "");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+      </script>
+
+    </div>
+
+  </main>
+
+  <footer class="page-section">
+    <p>Розробник: Антон Лукімський</p>
+  </footer>
+
+  <script src="core.js"></script>
+  <script>
+
+    // ACCOUNT DATA SCRIPT
+
+    
+    const accountId = new URL(location.href).searchParams.get('id')
+
+    if(accountId === null) {
+      alert('Ви не авторизувалися')
+      location.href = 'sign-log-in'
+    }
+
+    (async () => {
+
+      if(!localStorage.getItem('account')) {
+
+        const response = await fetch('/get-account?id=' + accountId),
+              data = await response.text()
+
+        if(response.status === 200) localStorage.setItem('account', data)
+        else if(response.status === 500) {
+          alert('Щось пішло не так, спробуйте перезайти в аккаунт')
+          console.log(data)
+        }
+      }
+
+      const accountObj = JSON.parse(localStorage.getItem('account'))
+
+      for(const node of document.querySelectorAll('.main-data .field')) {
+        node.querySelector('.value').value = accountObj[node.id]
+      }
+    })()
+
+    if(localStorage.getItem('account-id') === null) localStorage.setItem('account-id', new URL(location.href).searchParams.get('id'))
+
+
+    document.querySelector('#btn_logout').onclick = () => {
+      localStorage.removeItem('account')
+      localStorage.removeItem('account-id')
+      localStorage.removeItem('user-cart')
+      location.href = 'sign-log-in'
+    }
+
+    document.querySelector('#btn_delete_acc').onclick = async () => {
+      const isDelete = confirm('Ви точно хочете безповоротно видалити аккаунт, його відновлення буде неможливе!')
+
+      let isConfirmString = ''
+      if(isDelete) isConfirmString = prompt('Введіть \"видалити аккаунт\"')
+
+      if(isDelete && isConfirmString === 'видалити аккаунт') {
+        const response = await fetch('delete-account?id=' + localStorage.getItem('account-id'))
+        if(response.status === 200) {
+          alert('Аккаунт видалено')
+          localStorage.removeItem('account')
+          localStorage.removeItem('account-id')
+          location.href = 'sign-log-in'
+        }
+        else alert('Щось пішло не так, спробуйте знову')
+      }
+      else {
+        alert('Операція видалення аккаунта припинена')
+      }
+    }
+  </script>
+
+  <script>
+
+    // ACCOUNT CHANGE DATA SCRIPT
+
+    const acc_data = {}
+
+    const editBtn = document.getElementById('btn_edit_acc'),
+          saveBtn = document.getElementById('btn_save_acc')
+
+    editBtn.addEventListener('click', () => {
+
+      const valueElems = document.querySelectorAll('.value')
+
+      valueElems.forEach(valueElem => valueElem.disabled = false)
+
+      editBtn.style.display = 'none'
+      saveBtn.style.display = 'inline-block'
+    })
+
+    saveBtn.addEventListener('click', () => {
+
+      const inputFields = document.querySelectorAll('.field')
+      let queryObj = []
+
+      inputFields.forEach(inputField => {
+
+        const inputElem = inputField.querySelector('input')
+
+        queryObj.push([inputField.id, inputElem.value])
+
+        acc_data[inputField.id] = inputElem.value
+
+        inputElem.disabled = true
+      })
+
+      saveBtn.style.display = 'none'
+      editBtn.style.display = 'inline-block'
+
+      queryObj.push(['id', localStorage.getItem('account-id')])
+
+      const queryString = queryObj.map(itm => itm.join('=')).join('&')
+
+      fetch('set-account-properties?' + queryString)
+      .then(response => {
+        if(response.status === 200) {
+
+          const accountObj = JSON.parse(localStorage.getItem('account'))
+          for(const [key, value] of queryObj) accountObj[key] = value
+          localStorage.setItem('account', JSON.stringify(accountObj))
+
+          alert('Дані збережено')
+        }
+        else if(response.status === 500) {
+          alert('Щось пішло не так, спробуйте знову')
+        }
+      })
+    })
+
+  </script>
+
+  <script>
+    // ORDERS
+
+    const account = JSON.parse(localStorage.account)
+
+    const ordersContainer = document.querySelector('#tab-1'),
+          closedOrdersContainer = document.querySelector('#tab-2'),
+          orders = account.orders
+
+    orders.forEach((order, i) => {
+      const orderNode = document.createElement('div')
+      orderNode.classList.add('order')
+
+      let cartHTML = '',
+          finalPrice = 0
+
+      for(const id in order.cart) {
+        const item = order.cart[id]
+
+        cartHTML += `<li>${item.title}, ${item.count} штук (${item.price} ₴ за одиницю) - ${item.price * item.count} ₴</li>`
+        finalPrice += item.price * item.count
+      }
+
+      orderNode.innerHTML = `
+        <p>Ідентифікатор: ${order.id}</p>
+        <p>Статус: ${order.status}</p>
+        <p>Зміст:</p>
+        <ol>
+          ${cartHTML}
+        </ol>
+        <p>Остаточна ціна: ${finalPrice} ₴</p>
+        ${order.status !== 'СКАСОВАНИЙ' ? '<div class="delete-order" title="Видалити замовлення">🗑️</div>' : ''}
+      `
+
+      if(order.status !== 'СКАСОВАНИЙ') {
+
+        orderNode.querySelector('.delete-order').addEventListener('click', async () => {
+          const res = await fetch(`change-order-status?account-id=${localStorage['account-id']}&order-id=${order.id}&status=СКАСОВАНИЙ`)
+          if(res.status === 200) {
+            order.status = 'СКАСОВАНИЙ'
+            localStorage.account = JSON.stringify(account)
+            orderNode.remove()
+            alert('Замовлення скасовано')
+            location.reload()
+          }
+          else if(res.status === 500) {
+            alert('Щось пішло не так')
+            console.log(await res.text())
+          }
+        })
+  
+        ordersContainer.appendChild(orderNode)
+        return
+      }
+      
+      closedOrdersContainer.appendChild(orderNode)
+    })
+  </script>
+
+</body>
+</html>

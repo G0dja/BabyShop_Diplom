@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кошик</title>
+  <link rel="stylesheet" href="default.css">
+  <link rel="stylesheet" href="core.css">
+  <link rel="stylesheet" href="cart.css">
+  <link rel="stylesheet" href="buttons.css">
+</head>
+<body>
+  
+  <header class="page-section"> <!-- хедер-контейнер -->
+    <a href="/" class="logo header-item"> <!-- контейнер для логотипа -->
+      <img src="images/logo.png" alt="логотип"> <!-- картинка логотипа -->
+    </a>
+
+    <div class="search-bar header-item"> <!-- контейнер для вкладки поиска -->
+      <form class="not-form" action="/"> <!-- форма -->
+        <input id="search" type="text" name="search" placeholder="пошук товару"> <!-- вводчик текста для поиска товара по названию -->
+        <button type="submit">пошук</button> <!-- кнопка для поиска -->
+      </form>
+    </div>
+
+    <div class="account-tools header-item"> <!-- контейнер для элементов аккаунта -->
+      <a href="account" class="account-link">
+        <img src="images/account-30.png" alt="account">
+      </a> <!-- ссылка на страницу аккаунта -->
+      <a href="cart" class="shopping-cart-link">
+        <img src="images/cart-30.png" alt="cart">
+      </a> <!-- ссылка на страницу выбраных к покупке товаров -->
+    </div>
+  </header>
+
+  <main class="page-section">
+
+    <div class="items-list">
+
+      <p>Поки що в кошику нічого немає</p>
+      <!-- <div class="cart-item">
+        <div class="item-section">
+          <div class="div-image" style="background-image: url(images/joystick2.png)"></div>
+          <div class="section-content">
+            <p class="item-title">Item</p>
+            <p class="item-rating">*****</p>
+            <div class="price-container">
+              <p class="item-price">1999 ₴</p>
+              <div class="count-container">
+                <p class="decrease-button counter-button" onclick="this.nextElementSibling.value--">-</p>
+                <input type="number" name="Item" id="items-count" placeholder="1" value="1">
+                <p class="increase-button counter-button" onclick="this.previousElementSibling.value++">+</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="options-section">
+          <button class="remove-item">видалити</button>
+        </div>
+      </div>
+
+      <div class="cart-item">
+        <div class="item-section">
+          <div class="div-image" style="background-image: url(images/joystick2.png)"></div>
+          <div class="section-content">
+            <p class="item-title">Item</p>
+            <p class="item-rating">*****</p>
+            <div class="price-container">
+              <p class="item-price">1999 ₴</p>
+              <div class="count-container">
+                <p class="decrease-button counter-button">-</p>
+                <input type="number" name="Item" id="items-count" placeholder="1" value="1">
+                <p class="increase-button counter-button">+</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="options-section">
+          <button class="remove-item">видалити</button>
+        </div>
+      </div> -->
+    </div>
+
+    <div class="submit-order-container" style="display: none">
+      <button id="submit_oreder">Оформити замовлення</button>
+      <p class="price"><span id="final-cart-price">0</span> ₴</p>
+    </div>
+
+  </main>
+
+  <footer class="page-section">
+    <p>Розробник: Антон Лукімський</p>
+  </footer>
+
+  <script src="core.js"></script>
+  <script src="ratingToStars.js"></script>
+  <script>
+    function createCartItemElement(id, imageURL, title, rating, price, discount) {
+      const elem = document.createElement('div')
+      elem.classList.add('cart-item')
+      elem.dataset.id = id
+
+      let priceHTML = '<p class="item-price">' + price + ' ₴</p>'
+
+      if(discount) {
+        priceHTML = '<s class="item-raw-price">' + price + ' ₴</s>'
+        priceHTML += '<mark class="item-price">' + price * (100 - discount) / 100 + ' ₴</mark>'
+      }
+
+      elem.insertAdjacentHTML('beforeend', `
+        <div class="item-section">
+          <div class="div-image" style="background-image: url(${imageURL})"></div>
+          <div class="section-content">
+            <a class="item-title" href="item-page?id=${id}">${title}</a>
+            <p class="item-rating">${ratingToStars(rating)}</p>
+            <div class="price-container">
+              ${priceHTML}
+              <div class="count-container">
+                <p class="decrease-button counter-button" onclick="this.nextElementSibling.value--">-</p>
+                <input type="number" id="item-count" placeholder="1" min="1" value="1" oninput="calculateFinalPrice()">
+                <p class="increase-button counter-button" onclick="this.previousElementSibling.value++">+</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="options-section">
+          <button class="remove-item" data-item-remove-id="${id}" onclick="removeItemFunc(this)">видалити</button>
+        </div>
+      `)
+      return elem
+    }
+
+    const itemsContainer = document.querySelector('.page-section .items-list'),
+          submitOrderContainer = document.querySelector('.submit-order-container'),
+          submitOrderPriceNode = submitOrderContainer.querySelector('#final-cart-price')
+          items = JSON.parse(localStorage.getItem('user-cart') || '[]')
+
+    let finalPrice = 0;
+
+    (async () => {
+      if(items.length) {
+        itemsContainer.innerHTML = ''
+        const invalidIds = []
+
+        for(const itmId of items) {
+          const res = await fetch('/get-item?id=' + itmId)
+
+          if(res.status === 404) {
+            invalidIds.push(itmId)
+            continue
+          }
+          else if(res.status === 500) {
+            alert('Щось пішло не так')
+            console.log(await res.text())
+            return
+          }
+
+          const itmObj = await res.json()
+          
+          itemsContainer.insertAdjacentElement('beforeend', createCartItemElement(
+            itmId,
+            itmObj.images[0],
+            itmObj.title,
+            itmObj.rating,
+            itmObj.price,
+            itmObj.discount
+          ))
+
+          finalPrice += itmObj.discount ? +itmObj.price * (100 - +itmObj.discount) / 100 : +itmObj.price
+        }
+
+        if(invalidIds.length) {
+          invalidIds.forEach(id => {
+            const index = items.findIndex(item_id => item_id === id)
+            items.splice(index, 1)
+          })
+
+          localStorage.setItem('user-cart', JSON.stringify(items))
+        }
+
+        submitOrderPriceNode.innerText = finalPrice
+        submitOrderContainer.style.display = ''
+      }
+    })()
+
+    function calculateFinalPrice() {
+      setTimeout(() => {
+        let price = 0,
+            isOk = 1
+
+        const items = itemsContainer.querySelectorAll('.cart-item')
+
+        if(items.length) {
+          items.forEach(item => {
+            const priceNode = item.querySelector('.item-price'),
+                  itemCount = +item.querySelector('input#item-count').value
+
+            if(itemCount < 1) isOk = 0
+
+            price += parseFloat(priceNode.innerText) * itemCount
+          })
+
+          if(isOk) {
+            submitOrderPriceNode.innerText = price
+            submitOrderContainer.style.display = ''
+          }
+          else {
+            alert('Кількість товару не може бути менше одного!')
+            submitOrderContainer.style.display = 'none'
+          }
+        }
+        else {
+          submitOrderContainer.style.display = 'none'
+        }
+      }, 0)
+    }
+
+    function removeItemFunc(thisNode) {
+      const userCartString = localStorage.getItem('user-cart')
+      
+      let newUserCartString = ''
+
+      if(userCartString.match(thisNode.dataset.itemRemoveId + ',')) newUserCartString = userCartString.replace(thisNode.dataset.itemRemoveId + ',', '')
+      else if(userCartString.match(',' + thisNode.dataset.itemRemoveId)) newUserCartString = userCartString.replace(',' + thisNode.dataset.itemRemoveId, '')
+      else if(userCartString.match(thisNode.dataset.itemRemoveId)) newUserCartString = userCartString.replace(thisNode.dataset.itemRemoveId, '')
+
+      localStorage.setItem('user-cart', newUserCartString)
+      document.querySelector('div[data-id="' + thisNode.dataset.itemRemoveId + '"]').remove()
+
+      calculateFinalPrice()
+    }
+
+    itemsContainer.addEventListener('click', event => {
+      const eTC = event.target.classList
+      if(eTC.contains('decrease-button') || eTC.contains('increase-button')) {
+        calculateFinalPrice()
+      }
+    })
+  </script>
+  <script>
+    // MAKE BUY REQUEST
+
+    const buyBtn = document.querySelector('#submit_oreder'),
+          itemsList = document.querySelector('.items-list')
+
+    buyBtn.addEventListener('click', () => {
+
+      if(!localStorage.getItem('account-id') || !localStorage.getItem('account')) {
+        if(confirm('Ви не ввійшли в аккаунт, бажаєте увійти?')) {
+          location.href = 'sign-log-in'
+        }
+        return
+      }
+
+      if(confirm('Ви впевнені що хочете оформити замовлення?')) {
+        const requestBody = {
+          account_id: localStorage.getItem('account-id'),
+          cart: {}
+        }
+
+        itemsList.querySelectorAll('.cart-item').forEach(node => {
+          requestBody.cart[node.dataset.id] = {
+            title: node.querySelector('.item-title').innerText,
+            price: +node.querySelector('.item-price').innerText.replace(' ₴', ''),
+            count: +node.querySelector('#item-count').value
+          }
+        })
+
+        fetch('make-buy-request', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(requestBody)
+        })
+          .then(async res => {
+            if(res.status === 200) {
+              alert('Замовлення відправлено')
+              localStorage.removeItem('user-cart')
+              localStorage.account = await res.text()
+              location.reload()
+            }
+            else if(res.status === 500) {
+              alert('Щось пішло не так, спробуйте знову')
+              console.log(await res.text())
+            }
+          })
+      }
+    })
+  </script>
+
+</body>
+</html>

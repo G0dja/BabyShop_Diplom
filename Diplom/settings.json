@@ -1,0 +1,9 @@
+{
+  "admin_page_pass": 22242628,
+  "admin_page_session_time_limit": 216000000,
+  "admin_session_token": 249122949525,
+  "recovery_pass_time_limit": 21600000,
+  "recovery_pass_tokens": {
+    "30714322": "78kh3lj1.vmg"
+  }
+}

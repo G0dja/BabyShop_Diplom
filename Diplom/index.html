@@ -1,0 +1,283 @@
+<!DOCTYPE html> <!-- обозначение что это HTML 5 -->
+<html lang="uk"> <!-- начало документа и обозначение что язык страницы украинский -->
+<head> <!-- обозначение что это голова страницы -->
+  <meta charset="UTF-8"> <!-- обозначение что страница использует кодировку UTF-8 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Головна</title> <!-- название страницы -->
+  <link rel="stylesheet" href="default.css"> <!-- подключение цсс файла -->
+  <link rel="stylesheet" href="core.css"> <!-- подключение цсс файла -->
+  <link rel="stylesheet" href="items-view.css"> <!-- подключение цсс файла -->
+  <link rel="stylesheet" href="dropdown_module/dropdown.css">
+  <link rel="stylesheet" href="slider_module/slider.css">
+  <style>
+    #discounted-items-section {
+      margin-bottom: 60px;
+    }
+
+    #discounted-items-section .slider__arrow--next {
+      right: 1.5%;
+    }
+
+    #baners-container {
+      margin-bottom: 40px;
+    }
+
+    #baners-container .slider__sliding-node {
+      transition: .3s;
+    }
+    
+    #baners-container .slider__item {
+      width: 100%;
+      height: 400px;
+    }
+  </style>
+</head>
+<body> <!-- обозначение что это тело страницы -->
+
+  <header class="page-section"> <!-- хедер-контейнер -->
+    <div class="logo header-item"> <!-- контейнер для логотипа -->
+      <img src="images/logo.png" alt="логотип"> <!-- картинка логотипа -->
+    </div>
+
+    <div class="search-bar header-item"> <!-- контейнер для вкладки поиска -->
+      <form class="not-form"> <!-- форма -->
+        <input id="search" type="text" name="search" placeholder="пошук товару"> <!-- вводчик текста для поиска товара по названию -->
+        <button type="submit">пошук</button> <!-- кнопка для поиска -->
+      </form>
+    </div>
+
+    <div class="account-tools header-item"> <!-- контейнер для элементов аккаунта -->
+      <a href="account" class="account-link">
+        <img src="images/account-30.png" alt="account">
+      </a> <!-- ссылка на страницу аккаунта -->
+      <a href="cart" class="shopping-cart-link">
+        <img src="images/cart-30.png" alt="cart">
+      </a> <!-- ссылка на страницу выбраных к покупке товаров -->
+    </div>
+  </header>
+
+  <main>
+    <div id="baners-container" class="page-section"></div>
+
+    <div class="shopping-tools page-section">
+
+      <div class="dropdown">
+        <button class="dropdown-toggle">Категорії</button>
+        <div id="categories-dropdown" class="dropdown-content" style="width: 200px">
+          <!-- <label><input type="checkbox" value="option1"> Option 1</label>
+          <label><input type="checkbox" value="option2"> Option 2</label>
+          <label><input type="checkbox" value="option3"> Option 3</label>
+          <label><input type="checkbox" value="option4"> Option 4</label> -->
+        </div>
+      </div>
+  
+      <div class="sorting">
+        <div class="sorting-type">
+          <label for="sorting-type-select">Сортування за</label>
+          <select id="sorting-type-select">
+            <option disabled selected value="defaul">без сортування</option>
+            <option value="price">ціною</option>
+            <option value="rating">рейтингом</option>
+          </select>
+        </div>
+  
+        <div class="sorting-direktion sort-up">
+          <p class="up">↑</p>
+          <p class="down">↓</p>
+        </div>
+      </div>
+    </div>
+  
+    <div id="items-list" class="items-list page-section">
+
+    </div>
+
+    <div id="discounted-items-section" class="page-section">
+      <h2 style="margin-bottom: 10px; margin-top: 20px">Товари зі снижками</h2>
+
+    </div>
+
+  </main>
+
+  <footer class="page-section">
+    <p>Розробник: Антон Лукімський</p>
+  </footer>
+
+  <script src="core.js"></script>
+  <script src="dropdown_module/dropdown.js"></script>
+  <script src="slider_module/slider.js"></script>
+  <script src="itemsSorting.js"></script>
+  <script src="add_item_to_cart.js"></script>
+  <script>
+  let shopping_items = [],
+      current_shopping_items = []
+
+    const searchInput = document.querySelector('input#search'),
+          searchRequest = new URL(location.href).searchParams.get('search')
+    if(searchRequest) searchInput.value = searchRequest
+  </script>
+  <script>
+
+    const shoppingItemsNode = document.querySelector('#items-list')
+
+    function shoppingItemToHTMLElement(itemObj, itemId) {
+      const card = document.createElement('div')
+      card.classList.add('item-card')
+      card.dataset.itemId = itemId
+      card.dataset.categories = itemObj.categories?.join(',') ?? 'null'
+
+      let ratingString = ''
+
+      for(let i = 0; i < 5; i++) {
+        if(i < +itemObj.rating) ratingString += '★'
+        else ratingString += '☆'
+      }
+
+      ratingString += ' (' + itemObj.reviews.length + ' відгук'
+
+      const reviewsLastNumber = itemObj.reviews.length % 10,
+            reviewsLastTwoNumbers = itemObj.reviews.length % 100
+
+      if(reviewsLastNumber === 0 || (4 < reviewsLastNumber && reviewsLastNumber < 10) || (10 <= reviewsLastTwoNumbers && reviewsLastTwoNumbers <= 20)) ratingString += 'ів'
+      else if(1 < reviewsLastNumber && reviewsLastNumber < 5) ratingString += 'а'
+
+      let priceHTML = itemObj.price + ' ₴'
+
+      if(itemObj.discount) {
+        priceHTML = '<s>' + itemObj.price + ' ₴' + '</s>'
+        priceHTML += '<mark class="price__discount">' + itemObj.price * (100 - itemObj.discount) / 100 + ' ₴' + '</mark>'
+      }
+
+      ratingString += ')'
+
+      card.innerHTML = `
+        <div class="img div-image" style="background-image: url(${itemObj.images[0]})"></div>
+        <div class="description">
+          <a class="title" href="/item-page?id=${itemId}">${itemObj.title}</a>
+          <div class="raiting">${ratingString}</div>
+          <div class="price-container">
+            <p class="price">
+              ${priceHTML}  
+            </p>
+            <div class="icons-container">
+              <!-- <div class="add-to-like shopping-buttons">
+                <img src="images/heart-50.png" alt="heart">
+              </div> -->
+              <div class="add-to-buy shopping-buttons" data-buy-item-id="${itemId}">
+                <img class="cart-for-add-to-cart" src="images/cart-48.png" alt="cart">
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+
+      return card
+    }
+
+    fetch('/shopping_items.json')
+    .then(response => response.text())
+    .then(data => {
+      const shoppingItems = JSON.parse(data)
+
+      for(const key in shoppingItems.items) {
+        const elem = shoppingItemToHTMLElement(shoppingItems.items[key], key)
+        shoppingItemsNode.insertAdjacentElement('beforeEnd', elem)
+        shopping_items.push(elem)
+        current_shopping_items.push(elem)
+
+        const sliderElem = elem.cloneNode(1)
+
+        sliderElem.classList.add('slider__item')
+
+        if(shoppingItems.items[key].discount) discountsSlider.addHTMLItem(elem.cloneNode(1))
+      }
+
+      mainScritp()
+    })
+
+    function mainScritp() {
+
+      sortItemsScript()
+
+      if(searchRequest) {
+
+        current_shopping_items = current_shopping_items.reduce((arr, itm) => {
+          const title = itm.querySelector('.description a.title').innerText,
+                distance = stringsMatching(searchRequest, title)
+
+          if(distance < 4) arr.push(itm)
+          return arr
+        }, [])
+
+        current_shopping_items.sort((a, b) => {
+          const titleA = a.querySelector('.description a.title').innerText,
+                titleB = b.querySelector('.description a.title').innerText
+
+          const aDistance = stringsMatching(searchRequest, titleA),
+                bDistance = stringsMatching(searchRequest, titleB)
+          
+          return aDistance - bDistance
+        })
+
+        shoppingItemsNode.innerHTML = ''
+        current_shopping_items.forEach(itm => shoppingItemsNode.appendChild(itm))
+      }
+
+      initAddToCart()
+    }
+
+    // FILTERING BY CATEGORIES
+
+    const categoriesDropdown = document.querySelector('#categories-dropdown')
+
+    categoriesToHTML()
+      .then(html => {
+        categoriesDropdown.innerHTML = html
+
+        const cards = Array.from(cardsContainer.querySelectorAll('.item-card'))
+
+        setDropdown(categoriesDropdown, categories => {
+          if(categories.length === 0) {
+            cards.forEach((card) => cardsContainer.appendChild(card))
+            return
+          }
+          cardsContainer.innerHTML = ''
+
+          cards.filter(card => {
+            const cardCategories = card.dataset.categories.split(',')
+            return categories.find(category => cardCategories.includes(category)) !== undefined ? true : false
+          }).forEach((card) => cardsContainer.appendChild(card))
+        })
+      })
+
+  </script>
+
+  <script>
+    const discountedItemsContainer = document.querySelector('#discounted-items-section'),
+          discountsSlider = new Slider()
+
+    discountedItemsContainer.appendChild(discountsSlider.slider)
+
+
+    // banners
+
+    const banersContainer = document.querySelector('#baners-container'),
+          banersSlider = new Slider()
+
+    banersContainer.appendChild(banersSlider.slider)
+
+    banersSlider.itemsPerSlide = 1
+    banersSlider.slideStep = 102;
+
+    ['324925231.jpg', '334664395.jpg', 'image_2023-06-20_22-14-50.png'].forEach((itm, i) => {
+      const imgNode = document.createElement('div')
+      imgNode.style.width = '100%'
+      imgNode.style.height = '100%'
+      imgNode.style.display = 'block'
+      imgNode.style.background = 'center / contain no-repeat url(/images/' + itm + ')'
+
+      banersSlider.addHTMLItem(imgNode)
+    })
+  </script>
+</body>
+</html>

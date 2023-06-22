@@ -1,0 +1,174 @@
+{
+  "30714322": {
+    "name": "123",
+    "surname": "123",
+    "description": "123Опис ...",
+    "address": "123",
+    "email": "bodabodamops@gmail.com",
+    "pass": "111",
+    "orders": [
+      {
+        "id": "30714322-76gqp02m.pcd",
+        "status": "СКАСОВАНИЙ",
+        "cart": {
+          "1682537496225": {
+            "title": "hey",
+            "count": 5,
+            "price": 20
+          }
+        }
+      },
+      {
+        "id": "30714322-ao1wynk2.sy3",
+        "status": "СКАСОВАНИЙ",
+        "cart": {
+          "1687218136365": {
+            "title": "Сміливий Смак",
+            "price": "254.15 ",
+            "count": "1"
+          }
+        }
+      },
+      {
+        "id": "30714322-62hg11hg.aey",
+        "status": "СКАСОВАНИЙ",
+        "cart": {
+          "item_id": {
+            "title": "Казковий Світ",
+            "price": 468.8,
+            "count": 1
+          }
+        }
+      },
+      {
+        "id": "30714322-4muzlbby.gf2",
+        "status": "ВІДКРИТИЙ",
+        "cart": {
+          "1687218578010": {
+            "title": "Кольорова Казка",
+            "price": 2712.25,
+            "count": 2
+          },
+          "1687218136365": {
+            "title": "Сміливий Смак",
+            "price": 254.15,
+            "count": 4
+          },
+          "1687219114500": {
+            "title": "Еко-Комфорт",
+            "price": 89.75,
+            "count": 3
+          }
+        }
+      },
+      {
+        "id": "30714322-8v61pcoz.itl",
+        "status": "ВІДКРИТИЙ",
+        "cart": {
+          "1687218578010": {
+            "title": "Кольорова Казка",
+            "price": 2712.25,
+            "count": 3
+          }
+        }
+      },
+      {
+        "id": "30714322-k2imfy4c.lo9",
+        "status": "ВІДКРИТИЙ",
+        "cart": {
+          "1687218136365": {
+            "title": "Сміливий Смак",
+            "price": 254.15,
+            "count": 1
+          },
+          "1687218332156": {
+            "title": "Казковий Світ",
+            "price": 468.8,
+            "count": 1
+          },
+          "1687218578010": {
+            "title": "Кольорова Казка",
+            "price": 2712.25,
+            "count": 1
+          },
+          "1687218801063": {
+            "title": "Звіряткові Мрії",
+            "price": 494,
+            "count": 1
+          },
+          "1687218940990": {
+            "title": "Розумні Розваги",
+            "price": 534,
+            "count": 1
+          },
+          "1687219258660": {
+            "title": "Казковий Світ 2: Повернення Магії",
+            "price": 295,
+            "count": 1
+          },
+          "1687219114500": {
+            "title": "Еко-Комфорт",
+            "price": 89.75,
+            "count": 1
+          }
+        }
+      }
+    ]
+  },
+  "195651063": {
+    "name": "1111111111",
+    "surname": "11111111",
+    "description": "Опис ...",
+    "address": "1111111",
+    "email": "1111111@1111",
+    "pass": "1111111"
+  },
+  "536955984": {
+    "name": "boda",
+    "surname": "m",
+    "description": "------",
+    "address": "------",
+    "email": "b@b.b",
+    "pass": "123"
+  },
+  "556183159": {
+    "name": "15",
+    "surname": "15",
+    "description": "Опис ...",
+    "address": "15",
+    "email": "51@15",
+    "pass": "15"
+  },
+  "601010624": {
+    "name": "5",
+    "surname": "5",
+    "description": "Опис ...",
+    "address": "5",
+    "email": "5@5",
+    "pass": "5"
+  },
+  "604572088": {
+    "name": "name",
+    "surname": "surname",
+    "description": "description",
+    "address": "address",
+    "email": "email",
+    "pass": "password"
+  },
+  "683993305": {
+    "name": "54",
+    "surname": "45",
+    "description": "Опис ...",
+    "address": "54",
+    "email": "54@15",
+    "pass": "54"
+  },
+  "807871879": {
+    "name": "test 1",
+    "surname": "Boda",
+    "description": "Descr",
+    "address": "---",
+    "email": "bbb@b.bb",
+    "pass": "123"
+  }
+}
